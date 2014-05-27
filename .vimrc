@@ -106,8 +106,8 @@ au Filetype yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 
 " backup setting
-set backupdir=~/Documents/tmp
-set directory=~/Documents/tmp
+set backupdir=~/Documents/tmp/vim-tmp
+set directory=~/Documents/tmp/vim-tmp
 
 " autoload on change
 set autoread
@@ -299,3 +299,6 @@ if os=='mac'
 end
 
 au BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} setlocal spell
+
+let &colorcolumn=join (range(81, 999), ",")
+highlight ColorColumn ctermbg=235 guibg=#073642
