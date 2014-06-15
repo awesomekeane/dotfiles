@@ -62,7 +62,7 @@ syntax enable
 let g:syntastic_always_populate_loc_list=1
 
 " formatting
-set background=dark
+set background=light
 colorscheme solarized
 if os=="mac"
     set guifont=Inconsolata:h18
@@ -299,6 +299,3 @@ if os=='mac'
 end
 
 au BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} setlocal spell
-
-let &colorcolumn=join (range(81, 999), ",")
-highlight ColorColumn ctermbg=235 guibg=#073642

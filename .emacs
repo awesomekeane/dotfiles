@@ -5,7 +5,12 @@
 
 (require 'package)
 (package-initialize)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+						 '("marmalade" .
+							 "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives
+						 '("melpa" .
+							 "http://melpa.milkbox.net/packages/") t)
 
 ;; list of packages
 (add-to-list 'load-path "~/.emacs.d")
@@ -34,12 +39,11 @@
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete//ac-dict")
+(add-to-list 'ac-dictionary-directories
+						 "~/.emacs.d/auto-complete//ac-dict")
 (ac-config-default) ;auto-complete
 
 (smex-initialize) ;smex
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 (define-globalized-minor-mode ;fill column indicator
 	global-fci-mode fci-mode (lambda () (fci-mode 1)))
@@ -62,10 +66,8 @@
 (x-focus-frame nil)
 (column-number-mode 1)
 (show-paren-mode 1)
-(global-hl-line-mode 1)
-(global-visual-line-mode 1)
 (load-theme 'solarized-light t)     
-(set-default-font "Inconsolata 18") ;font
+(setq default-frame-alist '((font . "Inconsolata 18"))) ;font
 (global-linum-mode t) ;line number
 (setq visible-bell t) ;visual bell
 (setq resize-mini-windows nil) ;do not resize mini buffer
@@ -128,5 +130,8 @@
  '(inhibit-startup-screen t))
 (custom-set-faces)
 
+(server-start)
+
 (provide '.emacs)
+
 ;;; .emacs ends here
