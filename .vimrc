@@ -1,139 +1,113 @@
-" os check
-
-let os = ""
-
-if has("gui_macvim")
-    let os = "mac"
-else
-    let os = "win"
-endif
-
-
-" vundle
 set nocompatible
+
+" set up vundle
 filetype off
 
-if os=="mac"
-    set rtp+=~/.vim/bundle/vundle/
-    call vundle#rc()
-end
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
-if os=="win"
-    set rtp+=~/vimfiles/bundle/vundle/
-let g:airline_left_sep = '>'
-    call vundle#rc("~/vimfiles/bundle")
-    " to run same utilities in win
-    set shell=cmd.exe
-    set shellcmdflag=/C
-    set path+=~/bin
-endif
+Plugin 'gmrik/vundle'                    " plugin manager: PluginInstall, PluginClean
+Plugin 'tpope/vim-fugitive'              " git for vim: Git
+Plugin 'tpope/vim-surround'              " change surrounding chars easily: cs, ys
+Plugin 'tpope/vim-repeat'                " repeat unrepeatables
+Plugin 'scrooloose/nerdcommenter'        " easily comment/uncomment code: <leader>c<SPC>
+Plugin 'scrooloose/syntastic'            " syntax checking
+Plugin 'SirVer/ultisnips'                " snippets: <C-j>
+Plugin 'honza/vim-snippets'              " snippet libs
+Plugin 'mileszs/ack.vim'                 " grep: <leader>g
+Plugin 'Shougo/unite.vim'                " search: <leader>b, o, m
+Plugin 'Shougo/neomru.vim'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'bling/vim-airline'               " better statusbar
+Plugin 'tmhedberg/matchit'
+Plugin 'scrooloose/nerdtree'             " file browser
+Plugin 'sjl/gundo.vim'                   " tree-like undo
+Plugin 'Raimondi/delimitMate'
+Plugin 'taglist.vim'                     " show tags
+Plugin 'plasticboy/vim-markdown'
+Plugin 'marijnh/tern_for_vim'
+Plugin 'Lokaltog/vim-easymotion'         " easier movement: <leader><leader>
+Plugin 'Valloric/YouCompleteMe'          " completion: <TAB>
+Plugin 'Valloric/python-indent'
+Plugin 'sjl/vitality.vim'
+Plugin 'Rename'                          " rename current file: :Rename
+Plugin 'godlygeek/tabular'               " :Tabularize
+Plugin 'Valloric/vim-indent-guides'      " show indent levels
+Plugin 'michaeljsmith/vim-indent-object' " for python indenting
+Plugin 'python_match.vim'
+Plugin 'xolox/vim-pyref'                 " python doc search: <F1>
+Plugin 'xolox/vim-misc'
 
-Bundle 'gmrik/vundle'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-repeat'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/syntastic'
-Bundle 'SirVer/ultisnips'
-Bundle 'honza/vim-snippets'
-Bundle 'mileszs/ack.vim'
-" Bundle 'jeetsukumaran/vim-buffergator'
-" Bundle 'kien/ctrlp.vim'
-Bundle 'Shougo/unite.vim'
-Bundle 'Shougo/neomru.vim'
-Bundle 'Shougo/vimproc.vim'
-Bundle 'bling/vim-airline'
-Bundle 'tmhedberg/matchit'
-Bundle 'scrooloose/nerdtree'
-Bundle 'sjl/gundo.vim'
-Bundle 'Raimondi/delimitMate'
-Bundle 'taglist.vim'
-Bundle 'andviro/ropevim-bundled'
-Bundle 'plasticboy/vim-markdown'
-Bundle 'marijnh/tern_for_vim'
-Bundle 'Lokaltog/vim-easymotion'
 
-" os specific bundles
-if os=="mac"
-    Bundle 'Valloric/YouCompleteMe'
-    Bundle 'sjl/vitality.vim'
-endif
+augroup vimrc
+    autocmd!
+augroup END
 
-" syntax
-filetype on
-filetype plugin indent on
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            Syntax and appearance                             "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+filetype plugin indent on                  " turn on filetype
 syntax on
 syntax enable
-let g:syntastic_always_populate_loc_list=1
 
-" formatting
 set background=light
-colorscheme solarized
-if os=="mac"
-    set guifont=Inconsolata:h18
-endif
-if os=="win"
-    set guifont=Consolas:h10
-endif
-set ruler
-set number numberwidth=2
-set columns=86
-set guioptions-=r
+colorscheme solarized                         " solarized colortheme
+set guifont=Inconsolata:h18
+set ruler                                     " show ruler
+set number numberwidth=2                      " show line numbers
+set columns=90                                " slightly wider than 80
+set showmatch                                 " show matching paren
+set matchtime=2                               " reduce matching paren blink time
+set guioptions-=r                             " remove unnecessary gui components
+set guioptions-=R
 set guioptions-=T
+set guioptions-=l
+set guioptions-=L
 set guioptions-=m
+set guioptions-=M
+set cursorline                                " highlights the current line
 set showcmd
-set scrolloff=1 sidescrolloff=5
-
-" status line
-let g:airline#extensions#tabline#enabled=1
-unlet! g:airline#extensions#whitespace#checks
+set scrolloff=2 sidescrolloff=5
 set laststatus=2
-
-" editing
-set autoindent
-set backspace=indent,eol,start
-set noeb vb t_vb=
-set hidden
-
-" snipet trigger mapping
-let g:UltiSnipsExpandTrigger="<C-j>"
-let g:UltiSnipsJumpForwardTrigger="<C-j>"
-let g:UltiSnipsJumpBackwardTrigger="<C-k>"
-
-" line wrap
-set wrap linebreak nolist
-set textwidth=0
+set wrap linebreak nolist                     " linewrap
+set textwidth=80                              " official width = 80
 set wrapmargin=0
-
-" search
-set ignorecase smartcase lazyredraw
-
-" tab setting, tabstop, softtabstop, shiftwidth
-set ts=4 sts=4 sw=4 expandtab smarttab
-" filetypes that are fussy over tabs vs spaces
-au Filetype make setlocal ts=8 sts=8 sw=8 noexpandtab
-au Filetype yaml setlocal ts=2 sts=2 sw=2 expandtab
+set foldlevelstart=99                         " as default, open all folds
+let g:is_posix=1                              " highlight shell scripts as bash
+set cmdheight=2                               " 2 lines for command line
+set colorcolumn=+1                            " highlight the 81th line
+set autoindent                                " auto indent
+set copyindent
 
 
-" backup setting
-set backupdir=~/Documents/tmp/vim-tmp
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                   Editing                                    "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set backspace=indent,eol,start         " allow backspacing over everything
+set whichwrap+=<,>,h,l                 " allow bs and arrow to cross line boundaries
+set noeb vb t_vb=                      " turn off all bells
+set hidden                             " always make buffers hidden
+set history=1000                       " remember more history / undolevels
+set undolevels=1000
+set undofile                           " save undo info after closing file
+set ignorecase smartcase lazyredraw    " searching
+set ts=4 sts=4 sw=4 expandtab smarttab " tab setting, tabstop, softtabstop, shiftwidth
+au vimrc Filetype make setlocal ts=8 sts=8 sw=8 noexpandtab " tabwidth settings
+au vimrc Filetype yaml setlocal ts=2 sts=2 sw=2 expandtab
+set backupdir=~/Documents/tmp/vim-tmp " tmp directory setting
 set directory=~/Documents/tmp/vim-tmp
+set autoread                          " autoload on change
+set hlsearch incsearch                " highlight search
 
-" autoload on change
-set autoread
-
-" highlight search
-set hlsearch showmatch incsearch
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 Key Bindings                                 "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " comma as leader
 let mapleader = ","
-
-" nerdtree
-noremap <leader>f :NERDTree<cr>
-
-" spell checking
-nmap <silent> <leader>s :set spell!<CR>
-set spelllang=en
 
 " replace esc, in visual mode just press v again
 inoremap jk <esc>
@@ -142,27 +116,41 @@ inoremap Jk <esc>
 inoremap jK <esc>
 vnoremap v <esc>
 
-" gundo
-noremap <leader>u :GundoToggle<cr>
-
 " quick save
 noremap <leader>w :w!<cr>
 
-" no highlight
+" using ' to jump to the marked line and position and ` to jump to the marked
+" line
+nnoremap ' `
+nnoremap ` '
+
+" force saving if you do not have permission
+cnoremap w!! w !sudo tee % >/dev/null
+
+" remove highlight
 noremap <leader><cr> :noh<cr>
 
-" visual search and replace
+" visual search and replace, search / replace with the current visual selection
 vnoremap <silent> <leader>r :call VisualSelection('replace')<cr>
+vnoremap <silent> * :call VisualSelection('f')<cr>
+vnoremap <silent> # :call VisualSelection('b')<cr>
 
 " window movements
 noremap <leader>j <C-W>j
 noremap <leader>k <C-W>k
 noremap <leader>h <C-W>h
 noremap <leader>l <C-W>l
-" close window
+
+" 0 to close window
+" 1 to keep current window only
 noremap <leader>0 :hide<cr>
-" keep current window only
 noremap <leader>1 :only<cr>
+
+" fast movement by 15 lines
+noremap <C-j> 15gj
+noremap <C-k> 15gk
+noremap <m-j> 15gj
+noremap <m-k> 15gk
 
 " quick editing
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
@@ -170,10 +158,6 @@ map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
-
-" taglist
-noremap <C-t> :Tlist<CR>
-let tlist_pyrex_settings='python;c:classe;m:memder;f:function'
 
 " location list operations, here it is the same with
 " error list
@@ -197,40 +181,25 @@ inoremap <right> <nop>
 nnoremap <space> za
 vnoremap <space> zf
 
-" Ack, replacement for grep
-noremap <leader>g :Ack 
+" jump through screen lines instead of actuall lines
+nnoremap j gj
+nnoremap k gk
 
-" python: auto format the current file according to pep8
-au Filetype Python noremap <leader>= :!autopep8 --in-place --aggressive <c-r>=@%<cr><cr><cr>
+" toggle spell checking, go through spell check errors, add to dict, get
+" suggestions
+noremap <leader>ss :setlocal spell! spelllang=en_us<cr>
+noremap <leader>sn ]s
+noremap <leader>sp [s
+noremap <leader>sa zg
+noremap <leader>su z=
 
-" rope binding
-au Filetype Python noremap <leader>d :RopeGotoDefinition<cr>
+" remain in visual mode after shifting
+vnoremap < <gv
+vnoremap > >gv
 
-
-" edit vimrc
+" edit vimrc, and reload vimrc using v and V
 nnoremap <leader>v :tabedit $MYVIMRC<CR>
-
-" commentor setting
-let NERDSpaceDelims=1
-
-" Unite settings
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#custom#source('file_rec/async', 'sorters', 'sorter_rank')
-nnoremap <leader>b :Unite -buffer-name=buffers -winheight=10 buffer<cr>
-nnoremap <leader>m :Unite -buffer-name=recent -winheight=10 file_mru<cr>
-nnoremap <leader>o :Unite -start-insert -buffer-name=files -winheight=10 file_rec/async<cr>
-" nnoremap <silent> <C-p> :Unite -start-insert -buffer-name=files -winheight=10<cr>
-
-" YCM setting
-nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_autoclose_preview_window_after_completion = 1
-
-" delimiteMate python quotation
-au FileType Python let b:delimitMate_nesting_quotes = ['"']
-
-" delimiateMate jump over, discouraged (fater to just type)
-silent! inoremap <unique> <buffer> <C-k> <Plug>delimitMateS-Tab 
+noremap <silent> <leader>V :source $MYVIMRC<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
 " Visual Selection
 
@@ -261,21 +230,89 @@ function! VisualSelection(direction) range
     let @" = l:saved_reg
 endfunction
 
-" strip the trailing spaces
-function! <SID>StripTrailingWhitespaces()
-    " Preparation: save last search, and cursor position.
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    " Do the business:
-    %s/\s\+$//e
-    " Clean up: restore previous search history, and cursor position
-    let @/=_s
-    call cursor(l, c)
-endfunction
+" au FileType mkd map <leader>md :call MkdImgur()<CR>
 
-" markdown preview settings
+" turn on spell checking for certain files
+au vimrc FileType markdown gitcommit setlocal spell! spelllang=en_us
 
+au vimrc BufWritePost *.{md,mdown,mkd,mkdn,markdown,mdwn} call MkdPreview()
+
+au vimrc FileType Python autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                            Plugins and Functions                             "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""
+"  NERDTree  "
+""""""""""""""
+noremap <leader>f :NERDTree<cr>             " open NERDTree to view directory
+
+""""""""""""""
+"  Ultisnip  "
+""""""""""""""
+let g:UltiSnipsExpandTrigger="<C-j>"        " snippet trigger setting
+let g:UltiSnipsJumpForwardTrigger="<C-j>"
+let g:UltiSnipsJumpBackwardTrigger="<C-k>"
+
+"""""""""""
+"  Gundo  "
+"""""""""""
+
+noremap <leader>u :GundoToggle<cr>
+
+"""""""""""""
+"  Taglist  "
+"""""""""""""
+
+noremap <leader>t :Tlist<CR>
+let tlist_pyrex_settings='python;c:classe;m:memder;f:function'
+
+"""""""""
+"  Ack  "
+"""""""""
+noremap <leader>g :Ack 
+
+""""""""""""""
+"  Autopep8  "
+""""""""""""""
+au vimrc Filetype Python noremap <leader>= :!autopep8 --in-place --aggressive <c-r>=@%<cr><cr><cr>
+
+"""""""""""""""""""
+"  NERDCommenter  "
+"""""""""""""""""""
+let NERDSpaceDelims=1
+
+"""""""""""
+"  Unite  "
+"""""""""""
+" use b, o, m to open buffer, file, and recent files
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#custom#source('file_rec/async', 'sorters', 'sorter_rank')
+nnoremap <leader>b :Unite -buffer-name=buffers -winheight=10 buffer<cr>
+nnoremap <leader>m :Unite -buffer-name=recent -winheight=10 file_mru<cr>
+nnoremap <leader>o :Unite -start-insert -buffer-name=files -winheight=10 file_rec/async<cr>
+
+"""""""""""""""""""
+"  YouCompleteMe  "
+"""""""""""""""""""
+
+nnoremap <leader>d :YcmCompleter GoTo<CR> " jump to definition
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_min_num_identifier_candidate_chars = 4        " only start completion after typing 4 chars
+
+""""""""""""""""""
+"  DelimitMate   "
+""""""""""""""""""
+au vimrc FileType html,xhtml,markdown let b:delitMate_matchpairs = "(:),[:],{:}"
+au vimrc FileType Python let b:delimitMate_nesting_quotes = ['"'] " for python three quotes
+" delimiateMate jump over, discouraged (fater to just type)
+silent! inoremap <unique> <buffer> <C-k> <Plug>delimitMateS-Tab 
+
+"""""""""""""""""""""""
+"  Markdown Function  "
+"""""""""""""""""""""""
 function! MkdPreview()
     let fname = &backupdir . '/' . bufname('%') . '.html'
     call system('markdown ' . bufname('%') . ' > ' . fname)
@@ -285,17 +322,29 @@ function! MkdPreview()
 endfunction
 
 " markdown image upload
-
 function! MkdImgur()
     let fpath = expand('%:p')
     call system('imgurlized_md ' . fpath)
 endfunction
 
-" au FileType mkd map <leader>md :call MkdImgur()<CR>
+"""""""""""""""
+"  Syntastic  "
+"""""""""""""""
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_always_populate_loc_list = 1
 
-if os=='mac'
-    au BufWritePost *.{md,mdown,mkd,mkdn,markdown,mdwn} call MkdPreview()
-end
 
-au BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} setlocal spell
-autocmd FileType Python autocmd BufWritePre <buffer> :%s/\s\+$//e
+"""""""""""""
+"  Airline  "
+"""""""""""""
+let g:airline_theme='solarized'
+let g:airline#extensions#tabline#enabled=1    " statusline setting
+
+"""""""""""""""""""""""
+"  vim-indent-guides  "
+"""""""""""""""""""""""
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_color_change_percent=3
+let g:indent_guides_start_level=2
+let g:indent_guides_guide_size=1
