@@ -20,6 +20,7 @@ end
 
 if os=="win"
     set rtp+=~/vimfiles/bundle/vundle/
+let g:airline_left_sep = '>'
     call vundle#rc("~/vimfiles/bundle")
     " to run same utilities in win
     set shell=cmd.exe
@@ -36,8 +37,12 @@ Bundle 'scrooloose/syntastic'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 Bundle 'mileszs/ack.vim'
-Bundle 'jeetsukumaran/vim-buffergator'
-Bundle 'kien/ctrlp.vim'
+" Bundle 'jeetsukumaran/vim-buffergator'
+" Bundle 'kien/ctrlp.vim'
+Bundle 'Shougo/unite.vim'
+Bundle 'Shougo/neomru.vim'
+Bundle 'Shougo/vimproc.vim'
+Bundle 'bling/vim-airline'
 Bundle 'tmhedberg/matchit'
 Bundle 'scrooloose/nerdtree'
 Bundle 'sjl/gundo.vim'
@@ -78,6 +83,11 @@ set guioptions-=T
 set guioptions-=m
 set showcmd
 set scrolloff=1 sidescrolloff=5
+
+" status line
+let g:airline#extensions#tabline#enabled=1
+unlet! g:airline#extensions#whitespace#checks
+set laststatus=2
 
 " editing
 set autoindent
@@ -150,9 +160,9 @@ noremap <leader>k <C-W>k
 noremap <leader>h <C-W>h
 noremap <leader>l <C-W>l
 " close window
-noremap <leader>q <C-W>q
-" this window only
-noremap <leader>O :only<cr>
+noremap <leader>0 :hide<cr>
+" keep current window only
+noremap <leader>1 :only<cr>
 
 " quick editing
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
@@ -160,19 +170,6 @@ map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
-
-" tab operations
-noremap <C-]> gt
-noremap <C-[> gT
-noremap <C-1> 1gt
-noremap <C-2> 2gt
-noremap <C-3> 3gt
-noremap <C-4> 4gt
-noremap <C-5> 5gt
-noremap <C-6> 6gt
-noremap <C-7> 7gt
-noremap <C-8> 8gt
-noremap <C-9> 9gt
 
 " taglist
 noremap <C-t> :Tlist<CR>
@@ -200,9 +197,6 @@ inoremap <right> <nop>
 nnoremap <space> za
 vnoremap <space> zf
 
-" CtrlP, find file and open
-noremap <leader>o :CtrlP<cr>
-
 " Ack, replacement for grep
 noremap <leader>g :Ack 
 
@@ -216,19 +210,24 @@ au Filetype Python noremap <leader>d :RopeGotoDefinition<cr>
 " edit vimrc
 nnoremap <leader>v :tabedit $MYVIMRC<CR>
 
-" statusline
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-set laststatus=2
-
 " commentor setting
 let NERDSpaceDelims=1
+
+" Unite settings
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#custom#source('file_rec/async', 'sorters', 'sorter_rank')
+nnoremap <leader>b :Unite -buffer-name=buffers -winheight=10 buffer<cr>
+nnoremap <leader>m :Unite -buffer-name=recent -winheight=10 file_mru<cr>
+nnoremap <leader>o :Unite -start-insert -buffer-name=files -winheight=10 file_rec/async<cr>
+" nnoremap <silent> <C-p> :Unite -start-insert -buffer-name=files -winheight=10<cr>
 
 " YCM setting
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_autoclose_preview_window_after_completion = 1
 
 " delimiteMate python quotation
-au FileType python let b:delimitMate_nesting_quotes = ['"']
+au FileType Python let b:delimitMate_nesting_quotes = ['"']
 
 " delimiateMate jump over, discouraged (fater to just type)
 silent! inoremap <unique> <buffer> <C-k> <Plug>delimitMateS-Tab 
@@ -292,10 +291,11 @@ function! MkdImgur()
     call system('imgurlized_md ' . fpath)
 endfunction
 
-au FileType mkd map <leader>md :call MkdImgur()<CR>
+" au FileType mkd map <leader>md :call MkdImgur()<CR>
 
 if os=='mac'
     au BufWritePost *.{md,mdown,mkd,mkdn,markdown,mdwn} call MkdPreview()
 end
 
 au BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} setlocal spell
+autocmd FileType Python autocmd BufWritePre <buffer> :%s/\s\+$//e
