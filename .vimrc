@@ -29,6 +29,7 @@ Plugin 'marijnh/tern_for_vim'
 Plugin 'Lokaltog/vim-easymotion'         " easier movement: <leader><leader>
 Plugin 'Valloric/YouCompleteMe'          " completion: <TAB>
 Plugin 'Valloric/python-indent'
+Plugin 'Valloric/ListToggle'             " toggle quickfix / location list
 Plugin 'sjl/vitality.vim'
 Plugin 'Rename'                          " rename current file: :Rename
 Plugin 'godlygeek/tabular'               " :Tabularize
@@ -162,6 +163,8 @@ map <leader>et :tabe %%
 " location list operations, here it is the same with
 " error list
 " use ]c and [c to jump in vimdiff mode
+" Note that this corresponds with the <leader>l and <leader>q toggle of the
+" lists
 noremap [l :lprevious<cr>
 noremap ]l :lnext<cr>
 noremap [q :cprevious<cr>
@@ -239,6 +242,7 @@ au vimrc BufWritePost *.{md,mdown,mkd,mkdn,markdown,mdwn} call MkdPreview()
 
 au vimrc FileType Python autocmd BufWritePre <buffer> :%s/\s\+$//e
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                            Plugins and Functions                             "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -273,6 +277,7 @@ let tlist_pyrex_settings='python;c:classe;m:memder;f:function'
 """""""""
 noremap <leader>g :Ack 
 
+
 """"""""""""""
 "  Autopep8  "
 """"""""""""""
@@ -282,6 +287,7 @@ au vimrc Filetype Python noremap <leader>= :!autopep8 --in-place --aggressive <c
 "  NERDCommenter  "
 """""""""""""""""""
 let NERDSpaceDelims=1
+
 
 """""""""""
 "  Unite  "
@@ -294,10 +300,10 @@ nnoremap <leader>b :Unite -buffer-name=buffers -winheight=10 buffer<cr>
 nnoremap <leader>m :Unite -buffer-name=recent -winheight=10 file_mru<cr>
 nnoremap <leader>o :Unite -start-insert -buffer-name=files -winheight=10 file_rec/async<cr>
 
+
 """""""""""""""""""
 "  YouCompleteMe  "
 """""""""""""""""""
-
 nnoremap <leader>d :YcmCompleter GoTo<CR> " jump to definition
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_identifier_candidate_chars = 4        " only start completion after typing 4 chars
@@ -310,6 +316,7 @@ au vimrc FileType Python let b:delimitMate_nesting_quotes = ['"'] " for python t
 " delimiateMate jump over, discouraged (fater to just type)
 silent! inoremap <unique> <buffer> <C-k> <Plug>delimitMateS-Tab 
 
+
 """""""""""""""""""""""
 "  Markdown Function  "
 """""""""""""""""""""""
@@ -317,8 +324,9 @@ function! MkdPreview()
     let fname = &backupdir . '/' . bufname('%') . '.html'
     call system('markdown ' . bufname('%') . ' > ' . fname)
     " call system('open ' . fname)
-    let scpt = '/Users/Wei/Documents/Scripts/safari_open_beside.scpt'
-    call system('osascript ' . scpt . ' "file://' . fname . '"')
+    " let scpt = '/Users/Wei/Documents/Scripts/safari_open_beside.scpt'
+    " call system('osascript ' . scpt . ' "file://' . fname . '"')
+    call system('open ' . fname)
 endfunction
 
 " markdown image upload
@@ -326,6 +334,7 @@ function! MkdImgur()
     let fpath = expand('%:p')
     call system('imgurlized_md ' . fpath)
 endfunction
+
 
 """""""""""""""
 "  Syntastic  "
@@ -340,6 +349,8 @@ let g:syntastic_always_populate_loc_list = 1
 """""""""""""
 let g:airline_theme='solarized'
 let g:airline#extensions#tabline#enabled=1    " statusline setting
+let g:airline_detect_whitespace=0
+
 
 """""""""""""""""""""""
 "  vim-indent-guides  "
@@ -348,3 +359,11 @@ let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_color_change_percent=3
 let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
+
+
+""""""""""""""""
+"  ListToggle  "
+""""""""""""""""
+let g:lt_location_list_toggle_map = '<leader>l'
+let g:lt_quickfix_list_toggle_map = '<leader>q'
+
