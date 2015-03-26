@@ -6,7 +6,7 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-Plugin 'gmrik/vundle'                    " plugin manager: PluginInstall, PluginClean
+Plugin 'gmarik/vundle'                    " plugin manager: PluginInstall, PluginClean
 Plugin 'tpope/vim-fugitive'              " git for vim: Git
 Plugin 'tpope/vim-surround'              " change surrounding chars easily: cs, ys
 Plugin 'tpope/vim-repeat'                " repeat unrepeatables
